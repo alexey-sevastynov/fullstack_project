@@ -8,6 +8,7 @@ const { validationResult } = require("express-validator");
 const registerValidator = require("./validation/auth.js");
 
 const User = require("./models/User.js");
+const checkAuth = require("./utils/checkAuth.js");
 
 mongoose
   .connect(
@@ -83,6 +84,23 @@ app.post("/auth/register", registerValidator, async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ massage: "failed to register" });
+  }
+});
+
+app.get("/auth/me", checkAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "uset not found" });
+    }
+
+    const { passwordHash, ...userData } = user._doc;
+
+    res.json(userData);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ massage: "Not access!" });
   }
 });
 
