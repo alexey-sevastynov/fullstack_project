@@ -1,6 +1,9 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+const { validationResult } = require("express-validator");
+
+const registerValidator = require("./validation/auth.js");
 
 mongoose
   .connect(
@@ -14,23 +17,13 @@ const app = express();
 
 app.use(express.json());
 
-app.get("/", (request, response) => {
-  //"request" from Frontend
-  response.send("hello world"); // show message frontend on page
-});
-
-app.post("/auth/login", (req, res) => {
-  console.log(req.body);
-
-  const token = jwt.sign(
-    {
-      email: req.body.email,
-      fullName: "Alexey Sevastnov",
-    },
-    "secretKey"
-  );
-
-  res.json({ success: true, token });
+app.post("/auth/register", registerValidator, (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json(errors.array());
+  } else {
+    res.json({ success: true });
+  }
 });
 
 // how start the server
