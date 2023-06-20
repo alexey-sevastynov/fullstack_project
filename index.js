@@ -1,5 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+
 const mongoose = require("mongoose");
 const { validationResult } = require("express-validator");
 
@@ -19,15 +21,19 @@ const app = express();
 
 app.use(express.json());
 
-app.post("/auth/register", registerValidator, (req, res) => {
+app.post("/auth/register", registerValidator, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json(errors.array());
   } else {
+    const password = req.body.password;
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(password, salt);
     const doc = new UserSchema({
       email: req.body.email,
       fullName: req.body.fullName,
-      password: req.body.password,
+      //password encryption
+      passwordHash,
       avatarUrl: req.body.avatarUrl,
     });
     res.json({ success: true });
