@@ -2,7 +2,7 @@ const Post = require("../models/Post");
 
 const getAll = async (req, res) => {
   try {
-    const posts = await Post.find();
+    const posts = await Post.find().populate("user").exec(); // find all-Object information about user
 
     res.json(posts);
   } catch (error) {
