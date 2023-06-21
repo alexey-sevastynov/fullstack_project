@@ -6,6 +6,7 @@ const {
   getAll,
   getOne,
   remove,
+  update,
 } = require("./controllers/PostController");
 
 const mongoose = require("mongoose");
@@ -38,9 +39,9 @@ app.get("/auth/me", checkAuth, getMe);
 
 app.get("/posts", getAll);
 app.get("/posts/:id", getOne);
-app.post("/posts", checkAuth, postCreatedValidation, create);
+app.post("/posts", checkAuth, postCreatedValidation, checkAuth, create);
 app.delete("/posts/:id", checkAuth, remove);
-// app.patch("/posts", update);
+app.patch("/posts/:id", checkAuth, update);
 
 // how start the server
 app.listen(PORT, (err) => {

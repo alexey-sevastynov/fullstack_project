@@ -44,6 +44,33 @@ const remove = async (req, res) => {
     res.status(500).json({ massage: "failed to delete article" });
   }
 };
+
+const update = async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    Post.updateOne(
+      { _id: postId },
+      {
+        title: req.body.title,
+        text: req.body.text,
+        imageUrl: req.body.imageUrl,
+        tags: req.body.tags,
+        user: req.userId,
+      }
+    )
+      .then((doc) => res.json(doc))
+      .catch((err) =>
+        res.status(500).json({ message: "failed to delete article" })
+      );
+
+    res.json({ success: true });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ massage: "failed to update article" });
+  }
+};
+
 const create = async (req, res) => {
   try {
     const doc = new Post({
@@ -63,4 +90,4 @@ const create = async (req, res) => {
   }
 };
 
-module.exports = { create, getAll, getOne, remove };
+module.exports = { create, getAll, getOne, remove, update };
