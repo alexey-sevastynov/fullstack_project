@@ -1,5 +1,16 @@
 const Post = require("../models/Post");
 
+const getAll = async (req, res) => {
+  try {
+    const posts = await Post.find();
+
+    res.json(posts);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ massage: "failed to find articles" });
+  }
+};
+
 const create = async (req, res) => {
   try {
     const doc = new Post({
@@ -19,4 +30,4 @@ const create = async (req, res) => {
   }
 };
 
-module.exports = { create };
+module.exports = { create, getAll };

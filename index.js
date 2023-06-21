@@ -1,7 +1,7 @@
 const express = require("express");
 const { register, login, getMe } = require("./controllers/UserController");
 
-const { create } = require("./controllers/PostController");
+const { create, getAll } = require("./controllers/PostController");
 
 const mongoose = require("mongoose");
 
@@ -31,7 +31,7 @@ app.post("/auth/register", registerValidator, register);
 
 app.get("/auth/me", checkAuth, getMe);
 
-// app.get("/posts", getAll);
+app.get("/posts", getAll);
 // app.get("/posts/:id", getOne);
 app.post("/posts", checkAuth, postCreatedValidation, create);
 // app.delete("/posts", remove);
