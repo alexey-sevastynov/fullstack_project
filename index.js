@@ -1,7 +1,12 @@
 const express = require("express");
 const { register, login, getMe } = require("./controllers/UserController");
 
-const { create, getAll, getOne } = require("./controllers/PostController");
+const {
+  create,
+  getAll,
+  getOne,
+  remove,
+} = require("./controllers/PostController");
 
 const mongoose = require("mongoose");
 
@@ -34,7 +39,7 @@ app.get("/auth/me", checkAuth, getMe);
 app.get("/posts", getAll);
 app.get("/posts/:id", getOne);
 app.post("/posts", checkAuth, postCreatedValidation, create);
-// app.delete("/posts", remove);
+app.delete("/posts/:id", checkAuth, remove);
 // app.patch("/posts", update);
 
 // how start the server
