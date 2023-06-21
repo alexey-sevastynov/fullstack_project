@@ -11,6 +11,25 @@ const getAll = async (req, res) => {
   }
 };
 
+const getOne = async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    Post.findOneAndUpdate(
+      { _id: postId },
+      { $inc: { viewsCount: 1 } },
+      { returnDocument: "After" }
+    )
+      .then((doc) => res.json(doc))
+      .catch((err) =>
+        res.status(500).json({ message: "failed to find articles" })
+      );
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ massage: "failed to find articles" });
+  }
+};
+
 const create = async (req, res) => {
   try {
     const doc = new Post({
@@ -30,4 +49,4 @@ const create = async (req, res) => {
   }
 };
 
-module.exports = { create, getAll };
+module.exports = { create, getAll, getOne };
