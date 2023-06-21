@@ -1,9 +1,15 @@
 const express = require("express");
 const { register, login, getMe } = require("./controllers/UserController");
 
+const { create } = require("./controllers/PostController");
+
 const mongoose = require("mongoose");
 
-const registerValidator = require("./validation/auth.js");
+const {
+  registerValidator,
+  loginValidator,
+  postCreatedValidation,
+} = require("./validations.js");
 
 const checkAuth = require("./utils/checkAuth.js");
 
@@ -19,11 +25,17 @@ const app = express();
 
 app.use(express.json());
 
-app.post("/auth/login", login);
+app.post("/auth/login", loginValidator, login);
 
 app.post("/auth/register", registerValidator, register);
 
 app.get("/auth/me", checkAuth, getMe);
+
+// app.get("/posts", getAll);
+// app.get("/posts/:id", getOne);
+app.post("/posts", checkAuth, postCreatedValidation, create);
+// app.delete("/posts", remove);
+// app.patch("/posts", update);
 
 // how start the server
 app.listen(PORT, (err) => {
