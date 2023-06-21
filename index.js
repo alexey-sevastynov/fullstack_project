@@ -1,5 +1,6 @@
 const express = require("express");
 const { register, login, getMe } = require("./controllers/UserController");
+const multer = require("multer");
 
 const {
   create,
@@ -29,12 +30,28 @@ const PORT = 1313;
 
 const app = express();
 
+const storage = multer.diskStorage({
+  destination: (_, __, callBack) => {
+    callBack(null, "uploads");
+  },
+  filename: (_, file, callBack) => {
+    callBack(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage });
+
+app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
+  res.json({
+    url: `/uploads/${req.file.originalname}`,
+  });
+});
+
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
 app.post("/auth/login", loginValidator, login);
-
 app.post("/auth/register", registerValidator, register);
-
 app.get("/auth/me", checkAuth, getMe);
 
 app.get("/posts", getAll);
