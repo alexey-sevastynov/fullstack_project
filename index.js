@@ -1,6 +1,7 @@
 const express = require("express");
 const { register, login, getMe } = require("./controllers/UserController");
 const multer = require("multer");
+const handleValidationErrors = require("./utils/handleValidationErrors");
 
 const {
   create,
@@ -50,15 +51,28 @@ app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
-app.post("/auth/login", loginValidator, login);
-app.post("/auth/register", registerValidator, register);
+app.post("/auth/login", loginValidator, handleValidationErrors, login);
+app.post("/auth/register", registerValidator, handleValidationErrors, register);
 app.get("/auth/me", checkAuth, getMe);
 
 app.get("/posts", getAll);
 app.get("/posts/:id", getOne);
-app.post("/posts", checkAuth, postCreatedValidation, checkAuth, create);
+app.post(
+  "/posts",
+  checkAuth,
+  postCreatedValidation,
+  handleValidationErrors,
+  checkAuth,
+  create
+);
 app.delete("/posts/:id", checkAuth, remove);
-app.patch("/posts/:id", checkAuth, update);
+app.patch(
+  "/posts/:id",
+  checkAuth,
+  postCreatedValidation,
+  handleValidationErrors,
+  update
+);
 
 // how start the server
 app.listen(PORT, (err) => {
