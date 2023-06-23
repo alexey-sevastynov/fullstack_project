@@ -11,6 +11,21 @@ const getAll = async (req, res) => {
   }
 };
 
+const getLastTags = async (req, res) => {
+  try {
+    const posts = await Post.find().limit(5).exec(); // get last 5 articles
+
+    const tags = posts
+      .map((articleObj) => articleObj.tags)
+      .flat()
+      .slice(0, 5);
+    res.json(tags);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ massage: "failed to find tags" });
+  }
+};
+
 const getOne = async (req, res) => {
   try {
     const postId = req.params.id;
@@ -90,4 +105,4 @@ const create = async (req, res) => {
   }
 };
 
-module.exports = { create, getAll, getOne, remove, update };
+module.exports = { create, getAll, getLastTags, getOne, remove, update };

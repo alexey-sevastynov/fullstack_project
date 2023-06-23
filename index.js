@@ -7,6 +7,7 @@ const cors = require("cors");
 const {
   create,
   getAll,
+  getLastTags,
   getOne,
   remove,
   update,
@@ -58,6 +59,8 @@ app.post("/auth/register", registerValidator, handleValidationErrors, register);
 app.get("/auth/me", checkAuth, getMe);
 
 app.get("/posts", getAll);
+app.get("/tags", getLastTags);
+app.get("/posts/tags", getLastTags);
 app.get("/posts/:id", getOne);
 app.post(
   "/posts",
