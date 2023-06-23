@@ -2,6 +2,7 @@ const express = require("express");
 const { register, login, getMe } = require("./controllers/UserController");
 const multer = require("multer");
 const handleValidationErrors = require("./utils/handleValidationErrors");
+const cors = require("cors");
 
 const {
   create,
@@ -49,6 +50,7 @@ app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
 });
 
 app.use(express.json());
+app.use(cors());
 app.use("/uploads", express.static("uploads"));
 
 app.post("/auth/login", loginValidator, handleValidationErrors, login);
