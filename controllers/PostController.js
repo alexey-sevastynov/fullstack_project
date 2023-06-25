@@ -33,8 +33,9 @@ const getOne = async (req, res) => {
     Post.findOneAndUpdate(
       { _id: postId },
       { $inc: { viewsCount: 1 } },
-      { returnDocument: "After" }
+      { returnDocument: "after" }
     )
+      .populate("user")
       .then((doc) => res.json(doc))
       .catch((err) =>
         res.status(500).json({ message: "failed to find articles" })
