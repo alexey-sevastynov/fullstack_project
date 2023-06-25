@@ -1,4 +1,5 @@
 const express = require("express");
+const fs = require("fs");
 const { register, login, getMe } = require("./controllers/UserController");
 const multer = require("multer");
 const handleValidationErrors = require("./utils/handleValidationErrors");
@@ -35,6 +36,11 @@ const app = express();
 
 const storage = multer.diskStorage({
   destination: (_, __, callBack) => {
+    //if not find , then create folder "uploads"
+    if (!fc.existsSync("uploads")) {
+      fs.mkdirSync("uploads");
+    }
+
     callBack(null, "uploads");
   },
   filename: (_, file, callBack) => {
