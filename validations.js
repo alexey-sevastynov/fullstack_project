@@ -14,7 +14,7 @@ const postCreatedValidation = [
   body("title").isLength({ min: 3 }).isString(),
   body("text").isLength({ min: 3 }).isString(),
   body("tags").optional().isString(),
-  body("imageUrl").optional().isString(),
+  body("imageBase64"),
 ];
 
 module.exports = { registerValidator, loginValidator, postCreatedValidation };

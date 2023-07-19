@@ -1,7 +1,9 @@
 const express = require("express");
-const fs = require("fs");
+
+require("dotenv").config();
+
 const { register, login, getMe } = require("./controllers/UserController");
-const multer = require("multer");
+
 const handleValidationErrors = require("./utils/handleValidationErrors");
 const cors = require("cors");
 
@@ -25,44 +27,20 @@ const {
 const checkAuth = require("./utils/checkAuth.js");
 
 mongoose
-  .connect(
-    "mongodb+srv://alexseva94:12345@cluster0.fuw8wdu.mongodb.net/blog?retryWrites=true&w=majority"
-  )
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("database mongoDB atlas: ok!"))
   .catch((err) => console.log("database mongoDB atlas: ERROR!", err));
 const PORT = 1313;
 
 const app = express();
 
-const storage = multer.diskStorage({
-  destination: (_, __, callBack) => {
-    //if not find , then create folder "uploads"
-    if (!fc.existsSync("uploads")) {
-      fs.mkdirSync("uploads");
-    }
-
-    callBack(null, "uploads");
-  },
-  filename: (_, file, callBack) => {
-    callBack(null, file.originalname);
-  },
-});
-
-const upload = multer({ storage });
-
-app.use(express.json());
-app.use("/uploads", express.static("uploads"));
 app.use(cors());
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ limit: "25mb" }));
 
 app.post("/auth/login", loginValidator, handleValidationErrors, login);
 app.post("/auth/register", registerValidator, handleValidationErrors, register);
 app.get("/auth/me", checkAuth, getMe);
-
-app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
-  res.json({
-    url: `/uploads/${req.file.originalname}`,
-  });
-});
 
 app.get("/posts", getAll);
 app.get("/tags", getLastTags);
@@ -71,6 +49,7 @@ app.get("/posts/:id", getOne);
 app.post(
   "/posts",
   checkAuth,
+
   postCreatedValidation,
   handleValidationErrors,
   create
@@ -89,6 +68,6 @@ app.listen(PORT, (err) => {
   if (err) {
     return console.log(`server ${err}: OK!`);
   } else {
-    console.log(`server ${PORT}: OK!`);
+    console.log(`server http://localhost:${PORT}/ OK!`);
   }
 });

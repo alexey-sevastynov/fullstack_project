@@ -70,7 +70,7 @@ const update = async (req, res) => {
       {
         title: req.body.title,
         text: req.body.text,
-        imageUrl: req.body.imageUrl,
+        imageBase64: req.body.imageBase64,
         tags: req.body.tags.split(","),
         user: req.userId,
       }
@@ -92,7 +92,7 @@ const create = async (req, res) => {
     const doc = new Post({
       title: req.body.title,
       text: req.body.text,
-      imageUrl: req.body.imageUrl,
+      imageBase64: req.body.imageBase64,
       tags: req.body.tags.split(","),
       user: req.userId,
     });
