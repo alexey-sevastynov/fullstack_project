@@ -1,7 +1,5 @@
 const express = require("express");
 
-require("dotenv").config();
-
 const { register, login, getMe } = require("./controllers/UserController");
 
 const handleValidationErrors = require("./utils/handleValidationErrors");
@@ -26,8 +24,12 @@ const {
 
 const checkAuth = require("./utils/checkAuth.js");
 
+require("dotenv").config();
+
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(
+    "mongodb+srv://alexseva94:12345@cluster0.fuw8wdu.mongodb.net/blog?retryWrites=true&w=majority"
+  )
   .then(() => console.log("database mongoDB atlas: ok!"))
   .catch((err) => console.log("database mongoDB atlas: ERROR!", err));
 const PORT = 1313;
